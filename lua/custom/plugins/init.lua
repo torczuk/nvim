@@ -28,4 +28,20 @@ return {
       require("toggleterm").setup()
     end,
   },
+  {
+    'nvim-treesitter/nvim-treesitter-textobjects',
+    branch = 'main',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    config = function()
+      require('nvim-treesitter-textobjects').setup { move = { set_jumps = true } }
+      local move = require 'nvim-treesitter-textobjects.move'
+      local map = function(lhs, fn, q, desc)
+        vim.keymap.set({ 'n', 'x', 'o' }, lhs, function() fn(q, 'textobjects') end, { desc = desc })
+      end
+      map(']m', move.goto_next_start, '@function.outer', 'Next function start')
+      map('[m', move.goto_previous_start, '@function.outer', 'Prev function start')
+      map(']M', move.goto_next_end, '@function.outer', 'Next function end')
+      map('[M', move.goto_previous_end, '@function.outer', 'Prev function end')
+    end,
+  },
 }
